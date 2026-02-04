@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug run_case_rem (2D)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/run_case_rem.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": [
+        "--vehicle",
+        "specs/vehicles/trapezoid_doublewedge_t0p034_sweep34.yaml",
+        "--case",
+        "specs/cases/doc_ma5_8_alpha5_h30km_rad.yaml",
+        "--sampling",
+        "specs/sampling/engineering_full_wing_surface_grid_81x41.yaml",
+        "--mach",
+        "5",
+        "--alpha",
+        "0",
+        "--h_m",
+        "30480",
+        "--run_dir",
+        "runs/trap_dw_t0034_ma5_h30480m_a0_2d_debug"
+      ],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src"
+      }
+    }
+  ]
+}

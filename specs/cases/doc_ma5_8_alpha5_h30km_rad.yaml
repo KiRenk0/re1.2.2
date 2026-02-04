@@ -1,0 +1,57 @@
+case_spec:
+  theta_names: [mach, alpha]
+  theta_units: [1, deg]
+  theta_bounds:
+    mach: [5.0, 8.0]
+    alpha: [5.0, 5.0]
+
+  theta_sampling:
+    method: grid
+    grid_size: [4, 1]
+
+  fixed:
+    h_m: 30000
+    T_infty_K: 226.51
+
+  gas:
+    model: perfect_gas
+    gamma: 1.4
+    R_J_per_kgK: 287.0
+
+  atmosphere:
+    model: ussa1976
+    altitude_type: geometric
+
+  viscosity:
+    model: sutherland
+    mu_ref_Pa_s: 1.716e-5
+    T_ref_K: 273.15
+    S_K: 110.4
+
+
+  wall:
+    model: radiative_equilibrium
+    temperature_K: 300.0
+
+  lf_qw_model:
+    type: reference_enthalpy
+    pr: 0.72
+    cp_J_per_kgK: 1005
+    h0_model: constant_cp
+    q_scale_laminar: 1.0
+    q_scale_turbulent: 1.0
+    transition:
+      # Transition switch:
+      # - false: force fully-laminar (w_tr=0)
+      # - true:  use Eq (2.46) + engineering blending
+      enable: true
+    stagnation:
+      rn_unit: cm
+      # Doc Eq (2.41): q = q0*(1-sin^2(chi_w)*cos^2(alpha))^(n/2)
+      # Default n=1.5 -> exponent 0.75
+      sweep_exponent_n: 1.5
+
+  tw_model:
+    type: radiative_equilibrium
+    sigma: 5.76e-8
+    leading_edge_method: stagnation

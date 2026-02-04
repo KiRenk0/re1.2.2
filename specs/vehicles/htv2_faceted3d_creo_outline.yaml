@@ -1,0 +1,60 @@
+vehicle_spec:
+  vehicle_id: htv2_faceted3d_creo_outline
+
+  # These planform numbers are kept for compatibility with VehicleSpec schema and plotting.
+  # When faceted3d.planform.outline_csv is provided, the 3D solver will use the outline's
+  # span extent as b_half for sampling (and warn if it disagrees with this spec by >5%).
+  planform:
+    # Root chord is used only for plotting helpers; chord(y) is taken from outline intersections.
+    c_root_m: 3.6
+    c_tip_m: 3.6
+    # Set this to your best-guess half-span; solver will override for sampling if outline disagrees.
+    b_half_m: 1.1
+    sweep_le_deg: 72.0
+
+  leading_edge:
+    rn_m: 0.03
+
+  # Kept for schema compatibility; faceted3d branch does not rely on .dat geometry.
+  airfoil:
+    type: dat_file
+    path: "../airfoils/doublewedge_t0p034_interp_linear.dat"
+
+  surface:
+    emissivity: 0.8
+
+  faceted3d:
+    planform_half_angle_deg: 18.0
+    ridge_up_deg: 10.0
+    ridge_lo_deg: 3.0
+
+    # Closed-form slopes from (10°, 3°, 18°) faceted assumption:
+    sx_up: 0.17632698070846498
+    sy_up: -0.5426786456862612
+    sx_lo: -0.05240777928304121
+    sy_lo: 0.16129455951933025
+
+    chord_min_m: 0.02
+
+    # Most robust planform source: half-planform outline polyline from CAD.
+    # Your Creo axes:
+    # - x: nose->tail (matches solver x)
+    # - y: up        (ignored for planform)
+    # - z: centerline->LEFT wing, with symmetry plane z=0
+    # This CSV is "right half", so its z values are negative. We convert to solver span>=0 via:
+    #   span_m = -z_m
+    planform:
+      outline_csv: "../../new_spec/outline_xz_right.csv"
+      outline_x_col: "x_m"
+      outline_span_col: "z_m"
+      outline_span_sign: -1.0
+
+    # CAD surface mesh for sampling local facet slopes (most robust geometry source).
+    # The STL appears to be in millimeters (x~3600, span~1100), so unit is set to "mm".
+    surface:
+      stl: "../../new_spec/prt0001_ascii.stl"
+      unit: "mm"
+      # Creo: z is centerline->LEFT wing; we solve right half with span = -z.
+      span_sign: -1.0
+      right_half_only: true
+

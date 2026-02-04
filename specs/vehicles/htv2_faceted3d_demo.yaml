@@ -1,0 +1,47 @@
+vehicle_spec:
+  vehicle_id: htv2_faceted3d_demo
+
+  # Demo triangular half-planform for faceted3d branch.
+  # NOTE: For the triangle helper in geometry/faceted3d.py:
+  # - chord(y) = c_root - y/tan(half_angle)
+  # - chord goes to ~0 at y_tip ~= c_root*tan(half_angle)
+  planform:
+    c_root_m: 4.0
+    # Keep c_tip small to avoid plotting outline artifacts.
+    c_tip_m: 0.01
+    # Consistent with half_angle=18deg: b_half ~= 4*tan(18deg) ~ 1.30 m
+    b_half_m: 1.30
+    # Used by independence-principle correction (engineering choice).
+    sweep_le_deg: 72.0
+
+  leading_edge:
+    rn_m: 0.03
+
+  # Kept for schema compatibility; faceted3d branch does not rely on .dat geometry.
+  airfoil:
+    type: dat_file
+    path: "../airfoils/doublewedge_t0p034_interp_linear.dat"
+
+  surface:
+    emissivity: 0.8
+
+  # Presence of this key triggers the faceted3d solver branch.
+  faceted3d:
+    planform_half_angle_deg: 18.0
+    ridge_up_deg: 10.0
+    ridge_lo_deg: 3.0
+
+    # Prefer direct slope inputs (dimensionless dz/dx, dz/dy).
+    # Values below are the closed-form faceted (planar) result from angles (10°, 3°, 18°):
+    #   sx_up = tan(10°)
+    #   sy_up = -tan(10°)/tan(18°)
+    #   sx_lo = -tan(3°)
+    #   sy_lo =  tan(3°)/tan(18°)
+    sx_up: 0.17632698070846498   # tan(10deg)
+    sy_up: -0.5426786456862612
+    sx_lo: -0.05240777928304121  # -tan(3deg)
+    sy_lo: 0.16129455951933025
+
+    # Numerical guard near tip (when chord becomes too small).
+    chord_min_m: 0.02
+

@@ -1,0 +1,16 @@
+canonical_sampling_spec:
+  mode: root_windward_chord_line
+  y_over_b: 0.0
+
+  x_over_c:
+    type: linspace
+    start: 0.0
+    end: 1.0
+    n: 12
+    include_endpoints: true
+
+  m_line: 12
+  output_fields: [q_w]
+  concat_order: [q_w]
+  point_order: x_over_c_asc
+  output_surface_mode: windward_only

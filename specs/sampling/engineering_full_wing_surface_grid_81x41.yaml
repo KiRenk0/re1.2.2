@@ -1,0 +1,32 @@
+canonical_sampling_spec:
+  # Engineering mode: 2D sampling over half-wing planform.
+  # Grid ordering follows WingLowFidelitySolver:
+  # - x_over_c: chordwise points
+  # - y_over_b: spanwise points (0=root, 1=tip) normalized by half-span
+  mode: full_wing_surface_grid
+
+  x_over_c:
+    type: linspace
+    # Compute from x/c=0 (full grid). The solver will apply an internal x_min/c clamp
+    # for strip-theory formulas to avoid sharp-leading-edge singularities.
+    # For visual comparison with the paper, plots can exclude a small leading segment
+    # (e.g. x/c < 0.01) without changing the computed fields.
+    start: 0.0
+    end: 1.0
+    n: 81
+    include_endpoints: true
+
+  y_over_b:
+    type: linspace
+    start: 0.0
+    end: 1.0
+    n: 41
+    include_endpoints: true
+
+  # Total output points for step2_run_lf engineering mode:
+  # concatenation order: [windward (ny*nx), leeward (ny*nx)]
+  m_total: 6642
+  output_fields: [q_w, q_l]
+  concat_order: [q_w, q_l]
+  point_order: y_over_b_then_x_over_c_asc
+  output_surface_mode: windward_and_leeward

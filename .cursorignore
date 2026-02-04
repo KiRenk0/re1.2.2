@@ -1,0 +1,8 @@
+# Legacy baseline implementation (no longer needed after specs migration)
+ref_enthalpy/**
+
+# Noise (generated artifacts / caches)
+**/__pycache__/**
+**/*.pyc
+**/.pytest_cache/**
+runs/**

@@ -1,0 +1,96 @@
+case_spec:
+  theta_names: [mach, alpha]
+  theta_units: [1, deg]
+  theta_bounds:
+    mach: [5.0, 10.0]
+    alpha: [-8.0, 8.0]
+  
+  theta_sampling:
+    method: grid
+    grid_size: [10, 10] # [n_mach, n_alpha]
+
+  fixed:
+    h_m: 20000
+    T_infty_K: 216.65
+
+  gas:
+    model: perfect_gas
+    gamma: 1.4
+    R_J_per_kgK: 287.0
+
+  atmosphere:
+    model: ussa1976
+    altitude_type: geometric
+
+  viscosity:
+    model: sutherland
+    mu_ref_Pa_s: 1.716e-5
+    T_ref_K: 273.15
+    S_K: 110.4
+
+  transition_x_over_c: 0.3
+
+  wall:
+    model: fixed_temperature
+    temperature_K: 300.0
+
+  lf_qw_model:
+    type: reference_enthalpy
+    pr: 0.72
+    cp_J_per_kgK: 1005
+    h0_model: constant_cp
+    stagnation:
+      rn_unit: cm
+    edge_model:
+      type: busemann_shock_chain
+      apply_surface: windward
+      independence_principle:
+        enable: true
+        angle_unit: deg
+        alpha_e_formula: atan( tan(alpha) / cos(chi_w) )
+        mach_infty_e_formula: mach * sqrt(1 - sin(chi_w)^2 * cos(alpha)^2)
+      cp_definition:
+        formula: Cp = (p_e - p_infty)/(0.5*rho_infty*V_infty^2)
+      pe_from_cp:
+        formula: p_e = p_infty*(1 + 0.5*gamma*mach^2*Cp)
+      state_chain:
+        rho_c_over_rho_infty:
+          formula: 1 + 5*((p_c/p_infty)-1)/((p_c/p_infty)+6)
+        rho_e_over_rho_c:
+          formula: (p_e/p_c)^(1/gamma)
+        T_e_over_T_infty:
+          formula: (p_e/p_infty)*(rho_infty/rho_e)
+        mach_e2:
+          formula: 5*((T_infty/T_e)*(1+0.2*mach^2)-1)
+        V_e:
+          formula: mach_e*sqrt(gamma*R*T_e)
+      mu_e_model:
+        formula: mu_e = sutherland(T_e)
+
+    # Optional engineering warnings (do not change the physics, only log thresholds)
+    warnings:
+      # If max(q_w) > q_max_over_q_stag * q_stag, write a warning (default: 2.0)
+      q_max_over_q_stag: 2.0
+
+  tw_model:
+    type: radiative_equilibrium
+    sigma: 5.76e-8
+    # (Doc Eq 2.57) Unsteady wall-energy balance (boost segment)
+    # Enable by setting type: transient_balance
+    transient:
+      # Wall thermal capacity per area: rho*c*delta
+      # Provide your material values explicitly to avoid silent physics assumptions.
+      rho_wall_kg_m3: 2700.0
+      c_wall_J_per_kgK: 900.0
+      delta_wall_m: 0.002
+      # Time marching
+      dt_s: 0.01
+      t_end_s: 10.0
+      # Initial condition (scalar or length-nx array)
+      Tw_init_K: 300.0
+      # Safety clamp
+      Tw_min_K: 150.0
+      Tw_max_K: 6000.0
+      # Optional outputs
+      save_time_history: false
+      save_every_n_cases: 1

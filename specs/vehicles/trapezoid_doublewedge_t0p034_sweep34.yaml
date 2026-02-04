@@ -1,0 +1,27 @@
+vehicle_spec:
+  vehicle_id: trapezoid_doublewedge_t0p034_sweep34
+
+  # From provided figure (interpreted as half-wing planform):
+  # - root chord C_root = 4.0 m
+  # - tip chord  C_tip  = 1.8 m
+  # - half-span  b/2    = 2.31 m
+  # - leading-edge sweep = 34 deg (flow from right to left, right edge treated as LE)
+  planform:
+    b_half_m: 2.31
+    c_root_m: 4.0
+    c_tip_m: 1.8
+    taper_linear: true
+    sweep_le_deg: 34.0
+
+  # Sharp leading edge (strict diamond): set rn_m <= 0 to disable blunt stagnation correlation.
+  leading_edge:
+    rn_m: 0.0
+
+  # Symmetric double-wedge (diamond) airfoil with t/c = 0.034.
+  airfoil:
+    type: dat_file
+    path: "../airfoils/doublewedge_t0p034_interp_linear.dat"
+
+  # Not specified in the figure; default consistent with existing specs.
+  surface:
+    emissivity: 0.8
